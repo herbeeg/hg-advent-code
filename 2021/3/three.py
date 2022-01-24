@@ -39,7 +39,7 @@ class BinaryDiagnostic:
 
         return binary_counts
 
-    def consumption(self):
+    def consumption(self) -> int:
         common_bits = ''
 
         if self.report:
@@ -56,7 +56,7 @@ class BinaryDiagnostic:
 
         return gamma * epsilon
 
-    def flipBits(self, bits=''):
+    def flipBits(self, bits='') -> str:
         new_bits = ''
 
         if bits:
