@@ -8,19 +8,37 @@ int main()
 
   FILE *f = fopen("input.txt", "r");
 
-  if (f == NULL) {
+  if (NULL == f) {
     exit(0);
   }
 
   char buffer[2245];
-  int current = 0;
-  int max = 0;
+  long current = 0;
+  long max = 0;
 
-  while (fgets(buffer, 2245, f) != NULL) {
-    if (strcmp(buffer, "") == 0) {
+  while (NULL != fgets(buffer, 2245, f)) {
+    if (0 == strcmp(buffer, "\n")) {
+      if (max < current) {
+        max = current;
+      }
+
       current = 0;
     } else {
-      printf("%s", buffer);
+      int buffer_size = strlen(buffer);
+      char stripped[] = "";
+
+      int ptr;
+
+      for (ptr = 0; ptr < buffer_size; ptr++) {
+        stripped[ptr] = buffer[ptr];
+      }
+
+      char *end;
+      long val = strtol(stripped, &end, 10);
+
+      current = current + val;
     }
   }
+
+  printf("%ld", max);
 }
