@@ -2,32 +2,39 @@
 #include <stdlib.h>
 #include <string.h>
 
-int Get_Score(char *opponent, char *player)
+#include "two.h"
+
+/*
+ * strcmp requires a pointer to a sequence of characters that end
+ * with a 0 so we can swap to using a direct char comparison
+ * instead, with some so simple such as '=='.
+*/
+int Get_Score(char opponent, char player)
 {
   int score = 0;
 
-  if (0 == strcmp(opponent, "A")) {
-    if (0 == strcmp(player, "X")) {
+  if ('A' == opponent) {
+    if ('X' == player) {
       score = 4;
-    } else if (0 == strcmp(player, "Y")) {
+    } else if ('Y' == player) {
       score = 8;
-    } else if (0 == strcmp(player, "Z")) {
+    } else if ('Z' == player) {
       score = 3;
     }
-  } else if (0 == strcmp(opponent, "B")) {
-    if (0 == strcmp(player, "X")) {
+  } else if ('B' == opponent) {
+    if ('X' == player) {
       score = 1;
-    } else if (0 == strcmp(player, "Y")) {
+    } else if ('Y' == player) {
       score = 5;
-    } else if (0 == strcmp(player, "Z")) {
+    } else if ('Z' == player) {
       score = 9;
     }
-  } else if (0 == strcmp(opponent, "C")) {
-    if (0 == strcmp(player, "X")) {
+  } else if ('C' == opponent) {
+    if ('X' == player) {
       score = 7;
-    } else if (0 == strcmp(player, "Y")) {
+    } else if ('Y' == player) {
       score = 2;
-    } else if (0 == strcmp(player, "Z")) {
+    } else if ('Z' == player) {
       score = 6;
     }
   }
@@ -61,7 +68,7 @@ int main()
       }
     }
 
-    total = total + Get_Score(&c, &p);
+    total = total + Get_Score(c, p);
   }
 
   printf("The total rock, paper, scissors score based on the strategy guide is %d\n", total);
