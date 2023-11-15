@@ -15,15 +15,36 @@ int main()
   char buffer[2245];
 
   long current = 0;
-  long max = 0;
+  long top_three[3] = { 0, 0, 0 };
 
   while (NULL != fgets(buffer, 2245, f)) {
     // If the next line is just a newline char, then
     // we want to reset the current sum and check
     // if it is the largest so far.
     if (0 == strcmp(buffer, "\n")) {
-      if (max < current) {
-        max = current;
+      for (int pivot = 0; 3 > pivot; pivot++) {
+        if (top_three[pivot] < current) {
+          // Shift the top three values if the next total
+          // is higher than any of the currently
+          // stored values.
+          switch (pivot) {
+            case 0:
+              top_three[2] = top_three[1];
+              top_three[1] = top_three[pivot];
+              top_three[pivot] = current;
+              break;
+            case 1:
+              top_three[2] = top_three[pivot];
+              top_three[pivot] = current;
+              break;
+            case 2:
+              top_three[pivot] = current;
+              break;
+          }
+
+          // Don't continue to overwrite existing totals.
+          break;
+        }
       }
 
       current = 0;
@@ -36,7 +57,7 @@ int main()
       int ptr;
 
       // Only store the valid chars in a new string.
-      for (ptr = 0; ptr < buffer_size; ptr++) {
+      for (ptr = 0; buffer_size > ptr; ptr++) {
         stripped[ptr] = buffer[ptr];
       }
 
@@ -50,7 +71,8 @@ int main()
     }
   }
 
-  printf("%ld", max);
+  printf("The elf with the most calories is carrying %ld.\n", top_three[0]);
+  printf("The elves with the three most calories are carrying %ld.\n", top_three[0] + top_three[1] + top_three[2]);
 
   return 0;
 }
