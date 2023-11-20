@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "three.h"
+
+/*
+ * Rather than using a switch statement and returning
+ * before the break keyword, it seems better to
+ * just use a series of if statements.
+*/
 int Get_Priority_Value(char ident)
 {
   if ('a' == ident) {
@@ -126,13 +133,19 @@ int main()
   int sum = 0;
 
   while (NULL != fgets(buffer, 300, f)) {
+    // Accounting for the additional null-terminator.
     int buffer_size = strlen(buffer) - 1;
+    // The value we'll use when looping through each half.
     int allocation = (buffer_size / 2);
 
+    // The dynamic memory allocation is cruical to allow for
+    // re-definition of char array lengths.
     char *first_compartment = malloc(allocation + 1);
     char *second_compartment = malloc(allocation + 1);
 
     int buffer_ptr = 0;
+    // Tracking the for loop increments to tack the null-terminator
+    // to the end of the compartment.
     int f_ptr = 0;
     int s_ptr = 0;
 
@@ -147,20 +160,22 @@ int main()
     }
 
     f_ptr++;
+    // The null-terminator is cruical to avoid unwanted behaviour
+    // when dealing with these array lengths.
     first_compartment[f_ptr] = '\0';
 
     s_ptr++;
     second_compartment[s_ptr] = '\0';
 
     for (int f_count = 0; allocation > f_count; f_count++) {
+      // We can just search the entire second compartment for the matching
+      // character in the first without incrementing through both.
       if (NULL != strchr(second_compartment, first_compartment[f_count])) {
         char match;
         match = first_compartment[f_count];
-        printf("%c", match);
 
         if ('*' != match) {
           sum += Get_Priority_Value(match);
-          printf("%d\n", sum);
         }
 
         break;
