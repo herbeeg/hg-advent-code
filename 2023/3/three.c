@@ -129,8 +129,16 @@ int main()
   }
 
   char buffer[300];
+  // This needs to be a two-dimensional array to allow for multiple
+  // lengths of different character strings but we over-allocate
+  // memory to compensate for the variations in length.
+  char buffer_copy[300][50];
 
   int sum = 0;
+  int group_sum = 0;
+
+  // Tracking when we need to group priorities.
+  int group_ptr = 1;
 
   while (NULL != fgets(buffer, 300, f)) {
     // Accounting for the additional null-terminator.
@@ -142,6 +150,10 @@ int main()
     // re-definition of char array lengths.
     char *first_compartment = malloc(allocation + 1);
     char *second_compartment = malloc(allocation + 1);
+
+    // C doesn't support direct array modifications so instead we must
+    // copy the content of one variable to it's new location.
+    strcpy(buffer_copy[group_ptr - 1], buffer);
 
     int buffer_ptr = 0;
     // Tracking the for loop increments to tack the null-terminator
@@ -181,9 +193,28 @@ int main()
         break;
       }
     }
+
+    if (0 == group_ptr % 3) {
+      // Loop through the first rucksack to search for matches.
+      for (int g = 0; (int) strlen(buffer_copy[group_ptr - 3]) > g; g++) {
+        if (NULL != strchr(buffer_copy[group_ptr - 2], buffer_copy[group_ptr - 3][g])) {
+          if (NULL != strchr(buffer_copy[group_ptr - 1], buffer_copy[group_ptr - 3][g])) {
+            char group_match;
+
+            group_match = buffer_copy[group_ptr - 3][g];
+            group_sum += Get_Priority_Value(group_match);
+
+            break;
+          }
+        }
+      }
+    }
+
+    group_ptr++;
   }
 
-  printf("The sum of the priorities of the item types is %d", sum);
+  printf("The sum of the priorities of the item types is %d\n", sum);
+  printf("The sum of the priorities for the badge groups is %d", group_sum);
 
   return 0;
 }
