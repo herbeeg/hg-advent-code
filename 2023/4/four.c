@@ -25,6 +25,7 @@ int main()
   elf_delim[1] = '\0';
 
   int overlaps = 0;
+  int partial_overlaps = 0;
 
   while (NULL != fgets(buffer, 1000, f)) {
     if ('\n' != buffer[0]) {
@@ -69,10 +70,22 @@ int main()
           }
         }
       }
+
+      // We only need to use the minimum IDs during the comparison to confirm
+      // any overlaps that may occur during the process instead.
+      //
+      // Could potentially condense this down to one if statement but for
+      // the time being, it can stay as slightly more readable.
+      if ((second_min_id <= first_min_id) && (second_max_id >= first_min_id)) {
+        partial_overlaps++;
+      } else if ((first_min_id <= second_min_id) && (first_max_id >= second_min_id)) {
+        partial_overlaps++;
+      }
     }
   }
 
   printf("The number of assignment pairs where one fully contains the other is %d\n", overlaps);
+  printf("The number of assignment pairs where the ranges overlap is %d\n", partial_overlaps);
 
   return 0;
 }
