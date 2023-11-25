@@ -88,6 +88,10 @@ int main()
   matrix_delim[0] = '[';
   matrix_delim[1] = '\0';
 
+  char move_delim[2];
+  move_delim[0] = ' ';
+  move_delim[1] = '\0';
+
   bool matrix_read = false;
 
   while (NULL != fgets(buffer, 512, f)) {
@@ -96,18 +100,74 @@ int main()
       if (false == matrix_read) {
         for (int c = 0; 9 > c; c++) {
           if (' ' != buffer[indexes[c]]) {
-            crate_matrix[matrix_ptr][c] = buffer[indexes[c]];
+            crate_matrix[48 + matrix_ptr][c] = buffer[indexes[c]];
           }
         }
-        printf("%s\n", crate_matrix[matrix_ptr]);
 
+        // We only want to grab the raw data from the rows of crates.
         if (7 <= matrix_ptr) {
           matrix_read = true;
         } else {
           matrix_ptr++;
         }
+      } else {
+        // Skip any lines that start with whitespace.
+        if (' ' != buffer[0]) {
+          char *tmp_buffer = buffer;
+          // Shift twice to get to the first numeric move command.
+          char *tmp = strtok(tmp_buffer, move_delim);
+          tmp = strtok(NULL, move_delim);
+
+          int move_amount = atoi(tmp);
+
+          tmp = strtok(NULL, move_delim);
+          tmp = strtok(NULL, move_delim);
+
+          int move_from = atoi(tmp);
+
+          tmp = strtok(NULL, move_delim);
+          tmp = strtok(NULL, move_delim);
+
+          int move_to = atoi(tmp);
+
+          int from_row = 0;
+          int dest_row = 0;
+
+          // Keep scanning until we hit the first alpha character in the matrix.
+          do {
+            from_row++;
+          } while ('-' == crate_matrix[from_row][move_from - 1]);
+
+          do {
+            dest_row++;
+          } while ('-' == crate_matrix[dest_row][move_to - 1]);
+
+          for (int m = 1; move_amount >= m; m++) {
+            // Put the upcoming crate into the row above the destination column.
+            dest_row--;
+
+            crate_matrix[dest_row][move_to - 1] = crate_matrix[from_row][move_from - 1];
+            // Make sure we mark the source of the crate as empty.
+            crate_matrix[from_row][move_from - 1] = '-';
+
+            // Move down to the next row to get the next crate.
+            from_row++;
+          }
+        }
       }
     }
+  }
+
+  for (int parse_ptr = 0; 9 > parse_ptr; parse_ptr++) {
+    int parse_row = 0;
+
+    // Re-scan the matrix for the first alpha match in the column.
+    do {
+      parse_row++;
+    } while ('-' == crate_matrix[parse_row][parse_ptr]);
+
+    // Concat the top crate to the string for displaying the results.
+    top_crates[parse_ptr] = crate_matrix[parse_row][parse_ptr];
   }
 
   printf("The crates at the top of each stack are: %s", top_crates);
