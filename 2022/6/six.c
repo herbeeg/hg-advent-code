@@ -3,7 +3,7 @@
 
 typedef enum { false, true } bool;
 
-int main()
+int main(int argc, char **argv)
 {
   FILE *f = fopen("input.txt", "r");
 
@@ -16,48 +16,39 @@ int main()
   int start = 0;
   int end = 3;
 
+  // To alternate the string section to search for duplicates, the
+  // size can be passed in after changing the search logic.
+  if (NULL != argv[1]) {
+    // While the length passed is the size, subtract one from this
+    // to convert it to the end index.
+    end = atoi(argv[1]) - 1;
+  }
+
   int marker = 0;
 
   while (NULL != fgets(buffer, 4096, f)) {
     if ('\n' != buffer[0]) {
       do {
-        // I think it's more readable to just track what has been scanned
-        // so that we don't have to do any unnecessary comparisons.
-
-        // [0] --> [1] & [2] & [3]
-        // [1] --> [2] & [3]
-        // [2] --> [3]
-        int scanned = 0;
         bool duplicates = false;
 
         for (int s = start; end > s; s++) {
-          if (0 == scanned) {
-            if (
-              buffer[s + 1] == buffer[s] ||
-              buffer[s + 2] == buffer[s] ||
-              buffer[s + 3] == buffer[s]
-            ) {
-              duplicates = true;
-              // We can break out early to move on to the next if
-              // a duplicate character has already been found.
-              break;
-            }
-          } else if (1 == scanned) {
-            if (
-              buffer[s + 1] == buffer[s] ||
-              buffer[s + 2] == buffer[s]
-            ) {
-              duplicates = true;
-              break;
-            }
-          } else if (2 == scanned) {
-            if (buffer[s + 1] == buffer[s]) {
-              duplicates = true;
-              break;
-            }
-          }
+          // I think it's more readable to just track what has been scanned
+          // so that we don't have to do any unnecessary comparisons.
 
-          scanned++;
+          // [0] --> [1] & [2] & [3]
+          // [1] --> [2] & [3]
+          // [2] --> [3]
+          int scanned = s;
+          do {
+            // We just instead need to look one step ahead of the current
+            // scanning index until the end of the portion given.
+            if (buffer[scanned + 1] == buffer[s]) {
+              duplicates = true;
+              break;
+            }
+
+            scanned++;
+          } while (end > (scanned));
         }
 
         start++;
