@@ -7,7 +7,7 @@
 const char * Get_Outer_Directory_By_Name(char *name, struct directory *dirs, int length)
 {
   for (int l = 0; length > l; l++) {
-    if (strcmp(dirs[l].name, name)) {
+    if (0 == strcmp(dirs[l].name, name)) {
       int parent_id = dirs[l].parent;
       
       for (int p = 0; length > p; p++) {
@@ -24,7 +24,7 @@ const char * Get_Outer_Directory_By_Name(char *name, struct directory *dirs, int
 int Get_Parent_ID(char *search, struct directory *dirs, int length)
 {
   for (int s = 0; length > s; s++) {
-    if (strcmp(dirs[s].name, search)) {
+    if (0 == strcmp(dirs[s].name, search)) {
       return dirs[s].id;
     }
   }
@@ -52,6 +52,31 @@ int main()
   command_delim[0] = ' ';
   command_delim[1] = '\0';
   
+  char cd_command[3];
+  cd_command[0] = 'c';
+  cd_command[1] = 'd';
+  cd_command[2] = '\0';
+  
+  char dir_command[4];
+  dir_command[0] = 'd';
+  dir_command[1] = 'i';
+  dir_command[2] = 'r';
+  dir_command[3] = '\0';
+  
+  char ls_command[3];
+  ls_command[0] = 'l';
+  ls_command[1] = 's';
+  ls_command[2] = '\0';
+  
+  char back_dir[3];
+  back_dir[0] = '.';
+  back_dir[1] = '.';
+  back_dir[2] = '\0';
+  
+  char root_dir[2];
+  root_dir[0] = '/';
+  root_dir[1] = '\0';
+  
   mode read_mode = changing;
   char *previous_dir = malloc(32);
   char *current_dir = malloc(32);
@@ -63,11 +88,11 @@ int main()
         char *tmp = strtok(tmp_buffer, command_delim);
         tmp = strtok(NULL, command_delim);
 
-        if ('c' == tmp[0] && 'd' == tmp[1]) {
+        if (0 == strncmp(tmp, cd_command, 2)) {
           // Preparing to change the directory.
           tmp = strtok(NULL, command_delim);
           
-          if ('/' == tmp[0]) {
+          if (0 == strncmp(tmp, root_dir, 1)) {
             // Setting root directory.
             directories[0].name = malloc(5);
             strcpy(directories[0].name, "root\0");
@@ -76,27 +101,25 @@ int main()
             
             num_of_dirs++;
             current_dir = "root";
-          } else if ('.' == tmp[0] && '.' == tmp[1]) {
+          } else if (0 == strncmp(tmp, back_dir, 2)) {
             // Going back one directory.
             previous_dir = current_dir;
             current_dir = strdup(Get_Outer_Directory_By_Name(current_dir, directories, num_of_dirs));
-            printf("%s\n", current_dir);
           } else {
             // Changing to a child directory.
+            tmp[strlen(tmp) - 1] = '\0';
+            previous_dir = current_dir;
+            current_dir = strdup(tmp);
           }
           
           read_mode = changing;
-        } else if ('l' == tmp[0] && 's' == tmp[1]) {
+        } else if (0 == strncmp(tmp, ls_command, 2)) {
           read_mode = listing;
         }
       } else {
         char *tmp_buffer = buffer;
         
-        if (
-          'd' == tmp_buffer[0] && 
-          'i' == tmp_buffer[1] && 
-          'r' == tmp_buffer[2]
-        ) {
+        if (0 == strncmp(tmp_buffer, dir_command, 3)){
           directories = realloc(directories, ((num_of_dirs + 1) * 2 * sizeof(struct directory)));
           
           char *tmp = strtok(tmp_buffer, command_delim);
