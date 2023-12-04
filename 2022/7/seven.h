@@ -2,17 +2,17 @@
 #define __SEVEN_DOT_H__
 
 struct directory { 
-  char *name;
+  char name[32];
   int id;
   int parent;
+  int child_ids[32];
+  int num_of_children;
+  signed long long int local_size;
 };
 
 struct file {
   int id;
   int parent;
-  long int size;
 };
-
-typedef enum { changing, listing } mode;
 
 #endif

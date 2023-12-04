@@ -1106,4 +1106,3 @@ $ cd ..
 $ cd svgbqd
 $ ls
 69927 bjc.vdh
-
