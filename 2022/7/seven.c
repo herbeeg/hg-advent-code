@@ -197,15 +197,40 @@ int main()
   signed long long int dir_sum = 0;
   
   for (int ds = 0; num_of_dirs > ds; ds++) {
+    signed long long int size = directories[ds].local_size;
+    
     if (
-      0 <= directories[ds].local_size &&
-      100000 >= directories[ds].local_size
+      0 <= size &&
+      100000 >= size
     ) {
-      dir_sum += directories[ds].local_size;
+      dir_sum += size;
+    }
+  }
+  
+  signed long long int used_space = directories[0].local_size;
+  signed long long int total_space = 70000000;
+  signed long long int required_space = 30000000;
+  
+  signed long long int space_to_free = used_space + required_space - total_space;
+  signed long long int current_smallest = 0;
+  
+  for (int d_free = 0; num_of_dirs > d_free; d_free++) {
+    signed long long int size_to_compare = directories[d_free].local_size;
+    
+    if (0 == current_smallest) {
+      current_smallest = size_to_compare;
+    } else {
+      if (
+        space_to_free < size_to_compare &&
+        current_smallest > size_to_compare
+      ) {
+        current_smallest = size_to_compare;
+      }
     }
   }
 
-  printf("The total size of the directories under 100,000 is %lli", dir_sum);
+  printf("The total size of the directories under 100,000 is %lli\n", dir_sum);
+  printf("The smallest directory that would free up enough space is %lli large", current_smallest);
 
   return 0;
 }
