@@ -77,6 +77,81 @@ bool Check_Visibility(direction d, int start_x, int start_y)
   return true;
 }
 
+int Get_Scenic_Score_For_Direction(direction sd, int sc_x, int sc_y)
+{
+  int current_score = 0;
+  
+  switch (sd) {
+    case left:
+    {
+      int sc_xl = sc_x - 1;
+      
+      while (sc_xl >= 0) {
+        if (matrix[sc_y][sc_xl] >= matrix[sc_y][sc_x]) {
+          current_score++;
+          return current_score;
+        }
+        
+        current_score++;
+        sc_xl--;
+      }
+      
+      break;
+    }
+    case right:
+    {
+      int sc_xr = sc_x + 1;
+      
+      while (sc_xr < 99) {
+        if (matrix[sc_y][sc_xr] >= matrix[sc_y][sc_x]) {
+          current_score++;
+          return current_score;
+        }
+        
+        current_score++;
+        sc_xr++;
+      }
+      
+      break;
+    }
+    case up:
+    {
+      int sc_yu = sc_y - 1;
+      
+      while (sc_yu >= 0) {
+        if (matrix[sc_yu][sc_x] >= matrix[sc_y][sc_x]) {
+          current_score++;
+          return current_score;
+        }
+        
+        current_score++;
+        sc_yu--;
+      }
+      
+      break;
+    }
+    case down:
+    {
+      int sc_yd = sc_y + 1;
+      
+      while (sc_yd < 99) {
+        if (matrix[sc_yd][sc_x] >= matrix[sc_y][sc_x]) {
+          current_score++;
+          return current_score;
+        }
+        
+        current_score++;
+        sc_yd++;
+      }
+      
+      break;
+    }
+    default: { break; }
+  }
+  
+  return current_score;
+}
+
 int main()
 {
   FILE *f = fopen("input.txt", "r");
@@ -88,7 +163,9 @@ int main()
   char buffer[100];
   
   int y_ptr = 0;
+  
   int visible_trees = 0;
+  int highest_scenic = 0;
   
   while (NULL != fgets(buffer, 100, f)) {
     if ('\n' != buffer[0]) {
@@ -128,11 +205,27 @@ int main()
         ) {
           visible_trees++;
         }
+        
+        // For readability, I do like the fact that we query the
+        // function with different directions to get to our
+        // "highest scenic" value as it clearly states
+        // what is going on.
+        int check = 
+          Get_Scenic_Score_For_Direction(left, x, y) *
+          Get_Scenic_Score_For_Direction(right, x, y) *
+          Get_Scenic_Score_For_Direction(up, x, y) *
+          Get_Scenic_Score_For_Direction(down, x, y);
+        
+        // Only keep track of the highest value.
+        if (highest_scenic < check) {
+          highest_scenic = check;
+        }
       }
     }
   }
   
   printf("The number of trees that are visible from outside the grid is %d", visible_trees);
+  printf("The highest scenic score possible for any tree is %d", highest_scenic);
   
   return 0;
 }
