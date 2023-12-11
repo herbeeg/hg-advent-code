@@ -4,6 +4,8 @@
 
 #include "nine.h"
 
+struct visited *bridge_data;
+
 bool Tail_Should_Move(int hX, int hY, int tX, int tY, facing dir)
 {
   switch(dir) {
@@ -45,8 +47,17 @@ bool Tail_Should_Move(int hX, int hY, int tX, int tY, facing dir)
   return false;
 }
 
-bool Is_New_Tail_Position(int x, int y, Data d)
+bool Is_New_Tail_Position(int x, int y, int size)
 {
+  for (int n = 0; size > n; n++) {
+    if (
+      x == bridge_data[n].x_pos &&
+      y == bridge_data[n].y_pos
+    ) {
+      return false;
+    }
+  }
+  
   return true;
 }
 
@@ -60,7 +71,8 @@ int main()
   
   char buffer[2000];
   
-  struct bridge *bridge_data = malloc(2 * sizeof(struct bridge));
+  bridge_data = malloc(10000 * 2 * sizeof(struct visited));
+  
   facing face_dir = up;
   
   int head_pos_x = 0;
@@ -78,14 +90,8 @@ int main()
   while (NULL != fgets(buffer, 2000, f)) {
     if ('\n' != buffer[0]) {
       if (0 == visited_num) {
-        struct visited *vis = malloc(2 * sizeof(struct visited));
-        vis[0].id = 0;
-        vis[0].x_pos = 0;
-        vis[0].y_pos = 0;
-        
-        bridge_data[0].start_x = 0;
-        bridge_data[0].start_y = 0;
-        bridge_data[0].visited_ids[0] = *vis;
+        bridge_data[0].x_pos = 0;
+        bridge_data[0].y_pos = 0;
         
         visited_num++;
       }
@@ -116,15 +122,11 @@ int main()
             
             tail_pos_y--;
             
-            if (true == Is_New_Tail_Position(tail_pos_x, tail_pos_y, *bridge_data)) {
-              struct visited *new_tail = malloc(2 * sizeof(struct visited));
-              new_tail[0].id = visited_num;
-              new_tail[0].x_pos = tail_pos_x;
-              new_tail[0].y_pos = tail_pos_y;
+            if (true == Is_New_Tail_Position(tail_pos_x, tail_pos_y, visited_num)) {
+              bridge_data[visited_num].x_pos = tail_pos_x;
+              bridge_data[visited_num].y_pos = tail_pos_y;
               
-              bridge_data[visited_num].visited_ids[visited_num] = *new_tail;
-              
-              printf("ok");
+              visited_num++;
             }
           }
           
@@ -132,16 +134,84 @@ int main()
         }
       } else if (0 == strcmp("R", str_dir)) {
         face_dir = right;
+        
+        while (0 < amount) {
+          head_pos_x++;
+          
+          // Only move the tail if the head moves out of range by more than one tile.
+          if (true == Tail_Should_Move(head_pos_x, head_pos_y, tail_pos_x, tail_pos_y, face_dir)) {
+            if (tail_pos_y != head_pos_y) {
+              tail_pos_y = head_pos_y;
+            }
+            
+            tail_pos_x++;
+            
+            if (true == Is_New_Tail_Position(tail_pos_x, tail_pos_y, visited_num)) {
+              bridge_data[visited_num].x_pos = tail_pos_x;
+              bridge_data[visited_num].y_pos = tail_pos_y;
+              
+              visited_num++;
+            }
+          }
+          
+          amount--;
+        }
       } else if (0 == strcmp("D", str_dir)) {
         face_dir = down;
+        
+        while (0 < amount) {
+          head_pos_y++;
+          
+          // Only move the tail if the head moves out of range by more than one tile.
+          if (true == Tail_Should_Move(head_pos_x, head_pos_y, tail_pos_x, tail_pos_y, face_dir)) {
+            if (tail_pos_x != head_pos_x) {
+              tail_pos_x = head_pos_x;
+            }
+            
+            tail_pos_y++;
+            
+            if (true == Is_New_Tail_Position(tail_pos_x, tail_pos_y, visited_num)) {
+              bridge_data[visited_num].x_pos = tail_pos_x;
+              bridge_data[visited_num].y_pos = tail_pos_y;
+              
+              visited_num++;
+            }
+          }
+          
+          amount--;
+        }
       } else if (0 == strcmp("L", str_dir)) {
         face_dir = left;
+        
+        while (0 < amount) {
+          head_pos_x--;
+          
+          // Only move the tail if the head moves out of range by more than one tile.
+          if (true == Tail_Should_Move(head_pos_x, head_pos_y, tail_pos_x, tail_pos_y, face_dir)) {
+            if (tail_pos_y != head_pos_y) {
+              tail_pos_y = head_pos_y;
+            }
+            
+            tail_pos_x--;
+            
+            if (true == Is_New_Tail_Position(tail_pos_x, tail_pos_y, visited_num)) {
+              bridge_data[visited_num].x_pos = tail_pos_x;
+              bridge_data[visited_num].y_pos = tail_pos_y;
+              
+              visited_num++;
+            }
+          }
+          
+          amount--;
+        }
       } else {
         printf("Invalid direction provided.");
         exit(0);
       }
     }
   }
+  
+  printf("The number of positions that the tail of the rope visits at least once is %d.", visited_num);
   
   return 0;
 }

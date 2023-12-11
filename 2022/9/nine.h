@@ -14,19 +14,10 @@ typedef enum {
 } bool;
 
 struct visited {
-  int id;
   int x_pos;
   int y_pos;
 };
 
-struct bridge {
-  int start_x;
-  int start_y;
-  struct visited visited_ids[5000];
-};
-
-typedef struct bridge Data;
-
-extern bool Is_New_Tail_Position(int x, int y, Data d);
+extern bool Is_New_Tail_Position(int x, int y, int size);
 
 #endif
