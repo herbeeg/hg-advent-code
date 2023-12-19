@@ -10,46 +10,46 @@ char crt[6][41];
 void Fill_CRT_Screen_With_Defaults(char matrix[6][41])
 {
   char autofill[41];
-  autofill[0] = '.';
-  autofill[1] = '.';
-  autofill[2] = '.';
-  autofill[3] = '.';
-  autofill[4] = '.';
-  autofill[5] = '.';
-  autofill[6] = '.';
-  autofill[7] = '.';
-  autofill[8] = '.';
-  autofill[9] = '.';
-  autofill[10] = '.';
-  autofill[11] = '.';
-  autofill[12] = '.';
-  autofill[13] = '.';
-  autofill[14] = '.';
-  autofill[15] = '.';
-  autofill[16] = '.';
-  autofill[17] = '.';
-  autofill[18] = '.';
-  autofill[19] = '.';
-  autofill[20] = '.';
-  autofill[21] = '.';
-  autofill[22] = '.';
-  autofill[23] = '.';
-  autofill[24] = '.';
-  autofill[25] = '.';
-  autofill[26] = '.';
-  autofill[27] = '.';
-  autofill[28] = '.';
-  autofill[29] = '.';
-  autofill[30] = '.';
-  autofill[31] = '.';
-  autofill[32] = '.';
-  autofill[33] = '.';
-  autofill[34] = '.';
-  autofill[35] = '.';
-  autofill[36] = '.';
-  autofill[37] = '.';
-  autofill[38] = '.';
-  autofill[39] = '.';
+  autofill[0] = ' ';
+  autofill[1] = ' ';
+  autofill[2] = ' ';
+  autofill[3] = ' ';
+  autofill[4] = ' ';
+  autofill[5] = ' ';
+  autofill[6] = ' ';
+  autofill[7] = ' ';
+  autofill[8] = ' ';
+  autofill[9] = ' ';
+  autofill[10] = ' ';
+  autofill[11] = ' ';
+  autofill[12] = ' ';
+  autofill[13] = ' ';
+  autofill[14] = ' ';
+  autofill[15] = ' ';
+  autofill[16] = ' ';
+  autofill[17] = ' ';
+  autofill[18] = ' ';
+  autofill[19] = ' ';
+  autofill[20] = ' ';
+  autofill[21] = ' ';
+  autofill[22] = ' ';
+  autofill[23] = ' ';
+  autofill[24] = ' ';
+  autofill[25] = ' ';
+  autofill[26] = ' ';
+  autofill[27] = ' ';
+  autofill[28] = ' ';
+  autofill[29] = ' ';
+  autofill[30] = ' ';
+  autofill[31] = ' ';
+  autofill[32] = ' ';
+  autofill[33] = ' ';
+  autofill[34] = ' ';
+  autofill[35] = ' ';
+  autofill[36] = ' ';
+  autofill[37] = ' ';
+  autofill[38] = ' ';
+  autofill[39] = ' ';
   autofill[40] = '\n';
 
   for (int c = 0; 6 > c; c++) {
@@ -132,53 +132,55 @@ int main()
         total_signal_strength = Check_Cycles(220, total_signal_strength, register_x);
       }
       
+      int new_cycle_f = (current_cycle - 1) % 40;
+      
       if (1 <= current_cycle && 40 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[0][new_cycle - 1] = '#';
+        if (' ' == crt[0][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[0][new_cycle_f] = '#';
+          } else {
+            crt[0][new_cycle_f] = '.';
+          }
         }
       } else if (41 <= current_cycle && 80 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[1][new_cycle - 1] = '#';
+        if (' ' == crt[1][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[1][new_cycle_f] = '#';
+          } else {
+            crt[1][new_cycle_f] = '.';
+          }
         }
       } else if (81 <= current_cycle && 120 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[2][new_cycle - 1] = '#';
+        if (' ' == crt[2][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[2][new_cycle_f] = '#';
+          } else {
+            crt[2][new_cycle_f] = '.';
+          }
         }
       } else if (121 <= current_cycle && 160 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[3][new_cycle - 1] = '#';
+        if (' ' == crt[3][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[3][new_cycle_f] = '#';
+          } else {
+            crt[3][new_cycle_f] = '.';
+          }
         }
       } else if (161 <= current_cycle && 200 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[4][new_cycle - 1] = '#';
+        if (' ' == crt[4][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[4][new_cycle_f] = '#';
+          } else {
+            crt[4][new_cycle_f] = '.';
+          }
         }
       } else if (201 <= current_cycle && 240 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[5][new_cycle - 1] = '#';
+        if (' ' == crt[5][new_cycle_f]) {
+          if ((register_x - 1) <= (new_cycle_f + 1) && (register_x + 1) >= (new_cycle_f + 1)) {
+            crt[5][new_cycle_f] = '#';
+          } else {
+            crt[5][new_cycle_f] = '.';
+          }
         }
       }
       
@@ -209,55 +211,57 @@ int main()
         total_signal_strength = Check_Cycles(220, total_signal_strength, register_x);
       }
       
+      int new_cycle_s = (current_cycle - 1) % 40;
+      
       register_x += register_change;
       
       if (1 <= current_cycle && 40 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[0][new_cycle - 1] = '#';
+        if (' ' == crt[0][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[0][new_cycle_s] = '#';
+          } else {
+            crt[0][new_cycle_s] = '.';
+          }
         }
       } else if (41 <= current_cycle && 80 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[1][new_cycle - 1] = '#';
+        if (' ' == crt[1][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[1][new_cycle_s] = '#';
+          } else {
+            crt[1][new_cycle_s] = '.';
+          }
         }
       } else if (81 <= current_cycle && 120 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[2][new_cycle - 1] = '#';
+        if (' ' == crt[2][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[2][new_cycle_s] = '#';
+          } else {
+            crt[2][new_cycle_s] = '.';
+          }
         }
       } else if (121 <= current_cycle && 160 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[3][new_cycle - 1] = '#';
+        if (' ' == crt[3][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[3][new_cycle_s] = '#';
+          } else {
+            crt[3][new_cycle_s] = '.';
+          }
         }
       } else if (161 <= current_cycle && 200 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[4][new_cycle - 1] = '#';
+        if (' ' == crt[4][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[4][new_cycle_s] = '#';
+          } else {
+            crt[4][new_cycle_s] = '.';
+          }
         }
       } else if (201 <= current_cycle && 240 >= current_cycle) {
-        int new_cycle = current_cycle % 40;
-        if (0 == new_cycle) {
-          new_cycle = 40;
-        }
-        if ((register_x - 1) <= new_cycle && (register_x + 1) >= new_cycle) {
-          crt[5][new_cycle - 1] = '#';
+        if (' ' == crt[5][new_cycle_s]) {
+          if ((register_x - 1) <= (new_cycle_s + 1) && (register_x + 1) >= (new_cycle_s + 1)) {
+            crt[5][new_cycle_s] = '#';
+          } else {
+            crt[5][new_cycle_s] = '.';
+          }
         }
       }
       
